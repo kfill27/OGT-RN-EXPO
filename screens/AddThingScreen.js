@@ -9,10 +9,10 @@ import {  Image,
           View,
         } from 'react-native';
 
-export default class SettingsScreen extends React.Component {
+export default class AddThingScreen extends React.Component {
   static route = {
     navigationBar: {
-      title: 'One Good Thing Settings',
+      title: 'Add One Good Thing Today',
     },
   };
 
@@ -24,7 +24,7 @@ export default class SettingsScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
             <Text style={styles.getStartedText}>
-                Settings will go here!
+            Here is where our OGT will be uploaded.  
             </Text>
           </View>
         </ScrollView>
@@ -120,4 +120,3 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
-
