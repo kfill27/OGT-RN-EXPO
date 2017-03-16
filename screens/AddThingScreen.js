@@ -5,6 +5,7 @@ import {  Image,
           ScrollView,
           StyleSheet,
           Text,
+          TextInput,
           TouchableOpacity,
           View,
         } from 'react-native';
@@ -15,6 +16,13 @@ export default class AddThingScreen extends React.Component {
       title: 'Add One Good Thing Today',
     },
   };
+  
+  constructor(){
+    super();
+    this.state = {
+      text: 'I am text'
+    }
+  }
 
   render() {
     return (
@@ -26,6 +34,11 @@ export default class AddThingScreen extends React.Component {
             <Text style={styles.getStartedText}>
             Here is where our OGT will be uploaded.  
             </Text>
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              onChangeText={(text) => this.setState({text})}
+              value={this.state.text}
+            />
           </View>
         </ScrollView>
       </View>
