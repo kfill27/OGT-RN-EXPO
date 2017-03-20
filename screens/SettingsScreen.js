@@ -4,10 +4,10 @@ import {  Image,
           Platform,
           ScrollView,
           StyleSheet,
-          Text,
           TouchableOpacity,
           View,
         } from 'react-native';
+import { Button, Text } from '@shoutem/ui';
 
 export default class SettingsScreen extends React.Component {
   static route = {
@@ -23,9 +23,13 @@ export default class SettingsScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           <View style={styles.getStartedContainer}>
-            <Text style={styles.getStartedText}>
-                Settings will go here!
-            </Text>
+            <Button styleName="md-gutter-bottom"> 
+              <Text> Norah is fun </Text> 
+            </Button>
+            <Button> 
+              <Text> Max is fun</Text> 
+            </Button>
+            <Text>ilovemama</Text>
           </View>
         </ScrollView>
       </View>
