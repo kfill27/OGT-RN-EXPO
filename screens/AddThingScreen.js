@@ -16,13 +16,20 @@ export default class AddThingScreen extends React.Component {
     }
   }
   
-
-
   render() {
     const doSomething = () => {
-      console.log('heeelp')
-    //  this.itemsRef.push({ title: text })
+      fetch('https://onegoodthing-api.herokuapp.com/written_things', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: 'yourValue',
+        })
+      })
     }
+    
     return (
       <Screen>
         <View styleName="vertical md-gutter">

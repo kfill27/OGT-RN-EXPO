@@ -1,14 +1,17 @@
 import React from 'react';
+import moment from 'moment';
 import {
   Image,
   Linking,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
+  ListView,
+  Button,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Text, Heading, Title } from '@shoutem/ui';
 
 export default class HistoryScreen extends React.Component {
   static route = {
@@ -16,57 +19,67 @@ export default class HistoryScreen extends React.Component {
       visible: false,
     },
   };
-
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      written_things: null,
+    }
+  }
+  
+  componentDidMount() {
+    this.fetchData();
+  }
+  
+  fetchData() {
+    fetch('https://onegoodthing-api.herokuapp.com/written_things')
+    .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({
+          written_things: responseData,
+        });
+      }).catch((error) => {
+        console.error(error);
+      })
+      .done();
+  }
+  
   render() {
+    const writtenThings = this.state.written_things;
+    
+    if (!writtenThings) {
+      return this.renderLoadingView();
+    }
+    // Loop through all the written things & make a scrollable list
+    var written_thing = writtenThings[0];
+    return this.renderGoodThing(written_thing);
+  }
+  
+  renderLoadingView() {
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          <View style={styles.getStartedContainer}>
-            <Text style={styles.getStartedText}>
-              UI for Calendar and streak information go here. 
-            </Text>
-          </View>
-        </ScrollView>
+        <Text>
+          Loading good things...
+        </Text>
       </View>
     );
   }
-
-  // _maybeRenderDevelopmentModeWarning() {
-  //   if (__DEV__) {
-  //     const learnMoreButton = (
-  //       <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-  //         Learn more
-  //       </Text>
-  //     );
-  // 
-  //     return (
-  //       <Text style={styles.developmentModeText}>
-  //         Development mode is enabled, your app will run slightly slower but
-  //         you have access to useful development tools. {learnMoreButton}.
-  //       </Text>
-  //     );
-  //   } else {
-  //     return (
-  //       <Text style={styles.developmentModeText}>
-  //         You are not in development mode, your app will run at full speed.
-  //       </Text>
-  //     );
-  //   }
-  // }
-
-  // _handleLearnMorePress = () => {
-  //   Linking.openURL(
-  //     'https://docs.expo.io/versions/latest/guides/development-mode'
-  //   );
-  // };
-  // 
-  // _handleHelpPress = () => {
-  //   Linking.openURL(
-  //     'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-  //   );
-  // };
+  
+  renderGoodThing(written_thing) {
+    var newDate = moment(Date(written_thing.created_at)).format('MM/DD/YYYY');
+    
+    return (
+      <View style={styles.container}>
+        <Title styleName="h-center lg-gutter-top md-gutter-bottom">Your Good Things</Title>
+        <View style={styles.contentContainer}>
+          <Heading styleName="md-gutter-left">{newDate}</Heading>
+          <Text styleName="md-gutter-left">
+            {written_thing.description}
+          </Text>
+        </View>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -74,85 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 15,
-    textAlign: 'center',
-  },
   contentContainer: {
-    paddingTop: 80,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 140,
-    height: 38,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 23,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+    paddingTop: 50,
   },
 });
