@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import { Text, Heading, Title } from '@shoutem/ui';
+import Thing from '../components/Thing';
 
 export default class HistoryScreen extends React.Component {
   static route = {
@@ -23,8 +24,9 @@ export default class HistoryScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      written_things: null,
+      things: null,
     }
+    this.renderGoodThings = this.renderGoodThings.bind(this);
   }
   
   componentDidMount() {
@@ -32,11 +34,11 @@ export default class HistoryScreen extends React.Component {
   }
   
   fetchData() {
-    fetch('https://onegoodthing-api.herokuapp.com/written_things')
+    fetch('https://onegoodthing-api.herokuapp.com/things')
     .then((response) => response.json())
       .then((responseData) => {
         this.setState({
-          written_things: responseData,
+          things: responseData,
         });
       }).catch((error) => {
         console.error(error);
@@ -45,14 +47,12 @@ export default class HistoryScreen extends React.Component {
   }
   
   render() {
-    const writtenThings = this.state.written_things;
-    
-    if (!writtenThings) {
+    const { things } = this.state;
+    if (!things) {
       return this.renderLoadingView();
     }
     // Loop through all the written things & make a scrollable list
-    var written_thing = writtenThings[0];
-    return this.renderGoodThing(written_thing);
+    return this.renderGoodThings(things);
   }
   
   renderLoadingView() {
@@ -65,18 +65,23 @@ export default class HistoryScreen extends React.Component {
     );
   }
   
-  renderGoodThing(written_thing) {
-    var newDate = moment(Date(written_thing.created_at)).format('MM/DD/YYYY');
+  renderGoodThings(things) {
+    const prettyThings = things.map(function(datum, key) {
+      let newDate = moment(Date(datum.created_at)).format('MM/DD/YYYY');
+      return (
+        <View style={styles.contentContainer}>
+          <Heading styleName="md-gutter-left">{newDate}</Heading>
+          <Text key={key} styleName="md-gutter-left">
+            {datum.description}
+          </Text>
+        </View>
+      )
+    });
     
     return (
       <View style={styles.container}>
         <Title styleName="h-center lg-gutter-top md-gutter-bottom">Your Good Things</Title>
-        <View style={styles.contentContainer}>
-          <Heading styleName="md-gutter-left">{newDate}</Heading>
-          <Text styleName="md-gutter-left">
-            {written_thing.description}
-          </Text>
-        </View>
+          {prettyThings}
       </View>
     );
   }

@@ -50,7 +50,6 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={{flex: 1}}>
-        <Examples />
         <StatusBar barStyle="default" hidden={false} />
       </View>
     );
